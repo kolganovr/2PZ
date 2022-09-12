@@ -1,26 +1,29 @@
 #include <iostream>
+#include <stdlib.h>
 using namespace std;
 
 // ПЗ1 второй сем проги
 // https://docs.google.com/document/d/1Yh6SqeuZZLcbPdFe0Zmidrl3CLSAzBG01CuJPle_mt0/edit
 
+// Класс динамического массива
 class DynArr
 {
 public:
     // конструктор
-    DynArr(unsigned int length)
+    DynArr(int length)
     {
-        _size = max(0, length);
-        _arr = new int[length];
+        _size = max(length, 0); // Минимальная длинна массива - 0
+        _arr = new int[_size];
         FillWithNumber(0);
     }
+
     /// @brief Создает и заполняет масив числом
     /// @param length Длина нового массива
     /// @param value Число, которым заполням
-    DynArr(unsigned int length, int value)
+    DynArr(int length, int value)
     {
-        _size = max(0, length);
-        _arr = new int[length];
+        _size = max(length, 0); // Минимальная длинна массива - 0
+        _arr = new int[_size];
         FillWithNumber(value);
     }
 
@@ -33,6 +36,9 @@ public:
     // Выводит весь массив
     void Print()
     {
+        if (GetLength() <= 0) // Если массив нулевой длины
+            return;
+
         for (int i = 0; i < _size; i++)
         {
             cout << _arr[i] << " ";
@@ -52,6 +58,12 @@ public:
     /// @param value Новое значение
     void SetValue(unsigned int index, int value)
     {
+#pragma region Обработка ошибок
+        if (GetLength() <= 0) // Если массив нулевой длины
+        {
+            cout << "Слишком малый размер массива" << endl;
+            return;
+        }
         if (index < 0 || index >= _size) // Индекс за границами массива
         {
             cout << "Неверный индекс массива" << endl;
@@ -62,7 +74,9 @@ public:
             cout << "Неверное значение массива" << endl;
             return;
         }
-        _arr[index] = value;
+#pragma endregion
+
+        _arr[index] = value; // Записываем значение
     }
 
 private:
@@ -91,16 +105,6 @@ private:
         {
             _arr[i] = value;
         }
-    }
-
-    /// @brief Ограничивает переменную в диапазоне
-    /// @param value Переменная
-    /// @param min Нижняя граница интервала
-    /// @param max Верхняя граница интервала
-    /// @return
-    int Constrain(int value, int min, int max)
-    {
-        return min(max(value, min), max);
     }
 };
 
