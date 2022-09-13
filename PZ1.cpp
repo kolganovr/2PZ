@@ -33,10 +33,10 @@ public:
     }
 
     // Деструктор
-    ~DynArr()
-    {
-        delete[] _arr;
-    }
+    // ~DynArr()
+    // {
+    //     delete[] _arr;
+    // }
 
     // Выводит весь массив
     void Print(ostream &out = cout)
@@ -109,6 +109,12 @@ public:
         memcpy(_arr, array, sizeof(int) * minLength);
     }
 
+    DynArr ExpandArray(DynArr arrayToExpand, int sizeToAdd){
+        DynArr tmp(_size + sizeToAdd);
+        tmp.CopyPastArray(arrayToExpand);
+        delete[] _arr;
+        return tmp;
+    }
 private:
     /// @brief Создаёт массив и позволяет запонить его с клавиатуры
     /// @param length Длина массива
@@ -151,4 +157,11 @@ int main()
     array2.Print();
     array2.CopyPastArray(array);
     array2.Print();
+
+    array2 = array2.ExpandArray(array2, 3);
+    array2.Print();
+
+    array2.SetValue(1, 1);
+    array.CopyPastArray(array2);
+    array.Print();
 }
