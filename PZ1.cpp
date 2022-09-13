@@ -1,4 +1,5 @@
 #include <iostream>
+#include <array>
 #include <stdlib.h>
 using namespace std;
 
@@ -8,6 +9,10 @@ using namespace std;
 // Класс динамического массива
 class DynArr
 {
+private:
+    int *_arr;
+    unsigned int _size = 0;
+
 public:
     // конструктор
     DynArr(int length)
@@ -34,16 +39,16 @@ public:
     }
 
     // Выводит весь массив
-    void Print()
+    void Print(ostream &out = cout)
     {
         if (GetLength() <= 0) // Если массив нулевой длины
             return;
 
         for (int i = 0; i < _size; i++)
         {
-            cout << _arr[i] << " ";
+            out << _arr[i] << " ";
         }
-        cout << endl;
+        out << endl;
     }
 
     /// @brief Получить длину массива
@@ -51,6 +56,13 @@ public:
     unsigned int GetLength()
     {
         return _size;
+    }
+
+    /// @brief Возвращает массив
+    /// @return Динамический массив
+    int *GetArray()
+    {
+        return _arr;
     }
 
     /// @brief Изменяет значения элемента массива
@@ -79,10 +91,25 @@ public:
         _arr[index] = value; // Записываем значение
     }
 
-private:
-    int *_arr;
-    unsigned int _size = 0;
+    /// @brief Возвращает значение элемента массива
+    /// @param index Индекс элемента
+    /// @return Значение масива
+    int GetValue(int index)
+    {
+        return _arr[index];
+    }
 
+    /// @brief Копирует в массив
+    /// @param arrayFrom Из какого массива копировать
+    void CopyPastArray(DynArr arrayFrom)
+    {
+        int minLength = min(arrayFrom.GetLength(), _size);
+
+        int *array = arrayFrom.GetArray();
+        memcpy(_arr, array, sizeof(int) * minLength);
+    }
+
+private:
     /// @brief Создаёт массив и позволяет запонить его с клавиатуры
     /// @param length Длина массива
     void FillArrayFromKeyboard(unsigned int length)
@@ -99,7 +126,7 @@ private:
 
     /// @brief Заполняет весь массив одним числом
     /// @param value Число, которым заполняем
-    void FillWithNumber(int value)
+    inline void FillWithNumber(int value)
     {
         for (int i = 0; i < _size; i++)
         {
@@ -119,4 +146,9 @@ int main()
 
     array.SetValue(0, 59);
     array.Print();
+
+    DynArr array2(length);
+    array2.Print();
+    array2.CopyPastArray(array);
+    array2.Print();
 }
