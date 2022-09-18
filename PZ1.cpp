@@ -109,12 +109,25 @@ public:
         memcpy(_arr, array, sizeof(int) * minLength);
     }
 
-    DynArr ExpandArray(DynArr arrayToExpand, int sizeToAdd){
+    /// @brief Добавляет в массив нули
+    /// @param sizeToAdd количество новых элементов
+    /// @return
+    void ExpandArray(int sizeToAdd)
+    {
         DynArr tmp(_size + sizeToAdd);
-        tmp.CopyPastArray(arrayToExpand);
-        delete[] _arr;
-        return tmp;
+        tmp.CopyPastArray(_arr);
+        _arr = tmp.GetArray();
+        _size += sizeToAdd;
     }
+
+    /// @brief Добавляет число в конец массива
+    /// @param value Число, которое добовляем
+    void PushBack(int value)
+    {
+        ExpandArray(1);
+        SetValue(_size - 1, value);
+    }
+
 private:
     /// @brief Создаёт массив и позволяет запонить его с клавиатуры
     /// @param length Длина массива
@@ -139,6 +152,17 @@ private:
             _arr[i] = value;
         }
     }
+
+    /// @brief Копирует в массив
+    /// @param arrayFrom Из какого массива копировать
+    void CopyPastArray(int arrayFrom[])
+    {
+        unsigned int sizeFrom = sizeof(arrayFrom) / sizeof(int); // Вот тут исправить
+        int minLength = min(sizeFrom, _size);
+
+        int *array = arrayFrom;
+        memcpy(_arr, array, sizeof(int) * minLength);
+    }
 };
 
 int main()
@@ -158,10 +182,12 @@ int main()
     array2.CopyPastArray(array);
     array2.Print();
 
-    array2 = array2.ExpandArray(array2, 3);
+    array2.ExpandArray(3);
     array2.Print();
 
     array2.SetValue(1, 1);
     array.CopyPastArray(array2);
+
+    array.PushBack(9);
     array.Print();
 }
