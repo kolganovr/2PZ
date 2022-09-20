@@ -14,22 +14,23 @@ private:
     unsigned int _size = 0;
 
 public:
-    // конструктор
-    DynArr(int length)
-    {
-        _size = max(length, 0); // Минимальная длинна массива - 0
-        _arr = new int[_size];
-        FillWithNumber(0);
-    }
-
     /// @brief Создает и заполняет масив числом
     /// @param length Длина нового массива
     /// @param value Число, которым заполням
-    DynArr(int length, int value)
+    DynArr(int length, int value = 0)
     {
         _size = max(length, 0); // Минимальная длинна массива - 0
         _arr = new int[_size];
         FillWithNumber(value);
+    }
+
+    /// @brief Создает копию массива
+    /// @param arrayFrom Из какого массива копируем
+    DynArr(DynArr &arrayFrom)
+    {
+        _size = arrayFrom.GetLength();
+        _arr = new int[_size];
+        CopyPastArray(arrayFrom);
     }
 
     // Деструктор
@@ -71,7 +72,7 @@ public:
     void SetValue(unsigned int index, int value)
     {
 #pragma region Обработка ошибок
-        if (GetLength() <= 0) // Если массив нулевой длины
+        if (GetLength() == 0) // Если массив нулевой длины
         {
             cout << "Слишком малый размер массива" << endl;
             return;
@@ -96,6 +97,11 @@ public:
     /// @return Значение масива
     int GetValue(int index)
     {
+        if (index < 0 || index >= _size) // Индекс за границами массива
+        {
+            cout << "Неверный индекс массива" << endl;
+            return 0;
+        }
         return _arr[index];
     }
 
@@ -111,11 +117,10 @@ public:
 
     /// @brief Добавляет в массив нули
     /// @param sizeToAdd количество новых элементов
-    /// @return
     void ExpandArray(int sizeToAdd)
     {
         DynArr tmp(_size + sizeToAdd);
-        tmp.CopyPastArray(_arr);
+        tmp.CopyPastArray(_arr, _size);
         _arr = tmp.GetArray();
         _size += sizeToAdd;
     }
@@ -126,6 +131,18 @@ public:
     {
         ExpandArray(1);
         SetValue(_size - 1, value);
+    }
+
+    /// @brief Складывает массивы поэлементно
+    /// @param secondArr Массив, с которым складываем
+    void ArrayPlus(DynArr secondArr)
+    {
+        int minLength = min(secondArr.GetLength(), _size);
+
+        for (int i = 0; i < minLength; i++)
+        {
+            _arr[i] += secondArr.GetValue(i); // Складываем массивы
+        }
     }
 
 private:
@@ -155,9 +172,9 @@ private:
 
     /// @brief Копирует в массив
     /// @param arrayFrom Из какого массива копировать
-    void CopyPastArray(int arrayFrom[])
+    /// @param sizeFrom Размер исходного массива
+    void CopyPastArray(int arrayFrom[], unsigned int sizeFrom)
     {
-        unsigned int sizeFrom = sizeof(arrayFrom) / sizeof(int); // Вот тут исправить
         int minLength = min(sizeFrom, _size);
 
         int *array = arrayFrom;
@@ -174,7 +191,7 @@ int main()
     DynArr array(length, 7);
     array.Print();
 
-    array.SetValue(0, 59);
+    array.SetValue(0, 35);
     array.Print();
 
     DynArr array2(length);
@@ -189,5 +206,8 @@ int main()
     array.CopyPastArray(array2);
 
     array.PushBack(9);
+    array.Print();
+
+    array.ArrayPlus(array2);
     array.Print();
 }
