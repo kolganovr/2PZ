@@ -8,16 +8,16 @@ class List
 private:
     struct Node
     {
-        int id;  // the id of the node
-        int data;  // the data of the node
-        int accesCount = 0;  // the amount of times the node has been accessed
-        Node *next;  // the next node in the list
-        Node *prev;  // the previous node in the list
+        int id;             // the id of the node
+        int data;           // the data of the node
+        int accesCount = 0; // the amount of times the node has been accessed
+        Node *next;         // the next node in the list
+        Node *prev;         // the previous node in the list
     };
-    Node *head;
-    Node *tail;
-    int size;
-    int currentId = 0;
+    Node *head;        // The head of the doubly-linked list
+    Node *tail;        // The tail of the doubly-linked list
+    int size;          // The number of nodes in the list
+    int currentId = 0; // The current ID to give a new node
 
 public:
     List()
@@ -36,7 +36,7 @@ public:
             temp = head;
         }
     }
-    
+
     /// @brief Get node data by its id
     /// @param id id of the element
     /// @return data
@@ -74,7 +74,8 @@ public:
         // declare a pointer to a Node and set it equal to head
         Node *temp = head;
         // while the pointer to a Node is not null
-        for (int i = 0; i != pos +1; i++){
+        for (int i = 0; i != pos + 1; i++)
+        {
             // if the id of the Node is equal to the parameter
             if (i == pos)
             {
@@ -108,7 +109,7 @@ public:
         currentId++;
         sort();
     }
-    
+
     /// @brief Ads the element to the start of the list
     /// @param data element value
     void push_front(int data)
@@ -127,7 +128,7 @@ public:
         currentId++;
         sort();
     }
-    
+
     /// @brief Removes the element from the end of the list
     void pop_back()
     {
@@ -143,7 +144,7 @@ public:
             size--;
         }
     }
-    
+
     /// @brief Removes the element from the start of the list
     void pop_front()
     {
@@ -159,7 +160,7 @@ public:
             size--;
         }
     }
-    
+
     /// @brief Insert the element to a given position
     /// @param index where to insert the elemet
     /// @param data value of the element
@@ -190,7 +191,7 @@ public:
         size++;
         currentId++;
     }
-    
+
     /// @brief Removes the element from a given position
     /// @param index where to remove the element
     void eraseElem(int index)
