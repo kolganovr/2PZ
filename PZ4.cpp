@@ -3,6 +3,7 @@
 #include <string>
 #include <algorithm>
 #include <vector>
+#include <sstream>
 
 using namespace std;
 
@@ -87,6 +88,29 @@ void vectorFunc()
     for (const auto &x : intersect)
         cout << ' ' << x;
     cout << '\n';
+}
+
+void graphFunc()
+{
+    // N - number of vertices
+    int N;
+    cin >> N;
+    // remove the newline character
+    cin.ignore();
+
+    vector<vector<int>> graph(N);
+    for (int i = 0; i < N; i++)
+    {
+        string line;
+        getline(cin, line);
+        istringstream iss(line);
+
+        int num;
+        while (iss >> num)
+        {
+            graph[i].push_back(num);
+        }
+    }
 }
 
 int main()
