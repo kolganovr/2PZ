@@ -27,17 +27,15 @@ string generateRandomString(int length)
     return result;
 }
 
-/// @brief Returns the Hash code of the string by Horner's method
-/// @param str String you need a hash code for
-/// @return Hash code
-int getHashCodeHorner(string str) // Method to return the Horner Hash Code of a given string
+// get the hashcode of a string coding letter by its position in string and its value
+int getHashCode(string str)
 {
-    int hashCode = 0;                      // Initial result is 0
-    for (int i = 0; i < str.length(); i++) // Loop through the string
+    int hash = 0;
+    for (int i = 0; i < str.length(); i++)
     {
-        hashCode = hashCode * 37 + (int)str[i]; // Multiply the result by 37 and add the ASCII value of the current letter
+        hash = hash * i + str[i];
     }
-    return hashCode; // Return the final result
+    return hash;
 }
 
 int main()
@@ -56,7 +54,7 @@ int main()
         for (int i = 0; i < 2000; i++)
         {
             string str = generateRandomString(length); // generate a random string
-            hashCodes[i] = getHashCodeHorner(str);     // get the hashcode of the random string
+            hashCodes[i] = getHashCode(str);     // get the hashcode of the random string
             strings[i] = str;                          // store the random string in the array
         }
 

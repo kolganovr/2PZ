@@ -116,6 +116,7 @@ void graphFunc()
 int main()
 {
     // mapFunc();
-    vectorFunc();
+    // vectorFunc();
+    graphFunc();
     return 0;
 }

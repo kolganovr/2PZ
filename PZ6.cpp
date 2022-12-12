@@ -42,10 +42,12 @@ public:
     /// @return data
     int getbyid(int id)
     {
-        if (head == NULL) // check if list is empty
+        // if the id is less than 0, throw an error
+        if (id < 0)
         {
-            return -1;
+            throw "ID cannot be less than 0";
         }
+
         // declare a pointer to a Node and set it equal to head
         Node *temp = head;
         // while the pointer to a Node is not null
@@ -126,7 +128,6 @@ public:
             tail = temp;
         size++;
         currentId++;
-        sort();
     }
 
     /// @brief Removes the element from the end of the list
@@ -252,7 +253,7 @@ public:
                 }
                 temp2 = temp2->next;
             }
-            temp2 = head;
+            temp2 = temp;
             temp = temp->next;
         }
     }
