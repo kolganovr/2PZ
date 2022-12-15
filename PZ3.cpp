@@ -41,57 +41,84 @@ int getHashCode(string str)
 int main()
 {
     srand(time(NULL));
+    // do the following code 100 times to get the average time
 
-    // for lengts from 3 to 6
-    for (int length = 3; length <= 6; length++)
+    // create an arrays of times for each length for both methods
+    double timesByString[4] = {0, 0, 0, 0};
+    double timesByHash[4] = {0, 0, 0, 0};
+    int lengthOfTest = 10;
+
+    for (int i = 0; i < lengthOfTest; i++)
     {
-        int collisionsByHash = 0;   // int to store the number of collisions by hash
-        int collisionsByString = 0; // int to store the number of collisions by string
-        int hashCodes[2000];        // int array to store the hashCodes of the 2000 random strings
-        string strings[2000];       // string array to store the 2000 random strings
-
-        // generate 2000 random strings
-        for (int i = 0; i < 2000; i++)
+        // for lengts from 3 to 6
+        for (int length = 3; length <= 6; length++)
         {
-            string str = generateRandomString(length); // generate a random string
-            hashCodes[i] = getHashCode(str);     // get the hashcode of the random string
-            strings[i] = str;                          // store the random string in the array
-        }
+            int collisionsByHash = 0;   // int to store the number of collisions by hash
+            int collisionsByString = 0; // int to store the number of collisions by string
+            int hashCodes[2000];        // int array to store the hashCodes of the 2000 random strings
+            string strings[2000];       // string array to store the 2000 random strings
 
-        clock_t start = clock(); // initialize the clock
-
-        for (int i = 0; i < 2000; i++) // iterate through the first 2000 strings
-        {
-            for (int j = i + 1; j < 2000; j++) // iterate through the rest of the strings
+            // generate 2000 random strings
+            for (int i = 0; i < 2000; i++)
             {
-                if (strings[i] == strings[j]) // compare the strings
-                    collisionsByString++;     // increment the collision counter
+                string str = generateRandomString(length); // generate a random string
+                hashCodes[i] = getHashCode(str);           // get the hashcode of the random string
+                strings[i] = str;                          // store the random string in the array
             }
-        }
-        clock_t end = clock();                                        // set the stop time
-        double timeByString = (double)(end - start) / CLOCKS_PER_SEC; // calculate the time elapsed
 
-        // count collisions by hash
-        start = clock();
-        for (int i = 0; i < 2000; i++)
-        {
-            for (int j = i + 1; j < 2000; j++)
+            clock_t start = clock(); // initialize the clock
+
+            for (int i = 0; i < 2000; i++) // iterate through the first 2000 strings
             {
-                if (hashCodes[i] == hashCodes[j])
-                    collisionsByHash++;
+                for (int j = i + 1; j < 2000; j++) // iterate through the rest of the strings
+                {
+                    if (strings[i] == strings[j]) // compare the strings
+                        collisionsByString++;     // increment the collision counter
+                }
             }
-        }
-        end = clock();
-        double timeByHash = (double)(end - start) / CLOCKS_PER_SEC;
+            clock_t end = clock();                                               // set the stop time
+            timesByString[length - 3] += (double)(end - start) / CLOCKS_PER_SEC; // add the time to the array
 
-        // print results
-        cout << "Length: " << length << endl;
-        cout << "Collisions by hash: " << collisionsByHash << " ";
-        cout << "Collisions by string: " << collisionsByString << endl;
-        cout << "Time by hash: " << timeByHash << " ";
-        cout << "Time by string: " << timeByString << endl;
-        cout << "Time by hash is " << timeByString / timeByHash << " times faster" << endl;
-        cout << endl;
+            // count collisions by hash
+            start = clock();
+            for (int i = 0; i < 2000; i++)
+            {
+                for (int j = i + 1; j < 2000; j++)
+                {
+                    if (hashCodes[i] == hashCodes[j])
+                        collisionsByHash++;
+                }
+            }
+            end = clock();
+            timesByHash[length - 3] += (double)(end - start) / CLOCKS_PER_SEC;
+        }
+    }
+
+    // count the average time for each length
+    for (int i = 0; i < 4; i++)
+    {
+        timesByString[i] /= lengthOfTest;
+        timesByHash[i] /= lengthOfTest;
+    }
+
+    // print the results
+    cout << "Average time by string: " << endl;
+    for (int i = 0; i < 4; i++)
+    {
+        cout << "Length " << i + 3 << ": " << timesByString[i] << endl;
+    }
+    cout << endl;
+    cout << "Average time by hash: " << endl;
+    for (int i = 0; i < 4; i++)
+    {
+        cout << "Length " << i + 3 << ": " << timesByHash[i] << endl;
+    }
+    // cout the perfomanse ratio
+    cout << endl;
+    cout << "Performance ratio: " << endl;
+    for (int i = 0; i < 4; i++)
+    {
+        cout << "Length " << i + 3 << ": " << timesByString[i] / timesByHash[i] << endl;
     }
 
     return 0;
