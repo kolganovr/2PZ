@@ -13,26 +13,22 @@ void mapFunc()
     map<string, int> counts;
 
     // Read the input string
+    cout << "Enter a string containing words separated by spaces: ";
     string input;
     getline(cin, input);
 
     // Split the input string into individual words
+    istringstream iss(input);
     string word;
-    for (const auto &c : input)
+    while (iss >> word)
     {
-        if (c == ' ')
-        {
-            // Add the word to the map
-            ++counts[word];
+        // Remove any punctuation from the word
+        if (word[word.length() - 1] == '.' || word[word.length() - 1] == ',' 
+        || word[word.length() - 1] == '!' || word[word.length() - 1] == '?' || word[word.length() - 1] == ':')
+            word = word.substr(0, word.length() - 1);
 
-            // Clear the word
-            word.clear();
-        }
-        else
-        {
-            // Add the character to the word
-            word += c;
-        }
+        // Add the word to the map
+        ++counts[word];
     }
 
     // Print the count for each word
@@ -47,6 +43,7 @@ void vectorFunc()
     // random seed
     srand(time(NULL));
     // Read the sizes of the two vectors
+    cout << "Enter the sizes of the two vectors: ";
     int size1, size2;
     cin >> size1 >> size2;
 
@@ -85,38 +82,18 @@ void vectorFunc()
                           back_inserter(intersect));
 
     cout << "Intersecting elements:";
-    for (const auto &x : intersect)
-        cout << ' ' << x;
-    cout << '\n';
-}
-
-void graphFunc()
-{
-    // N - number of vertices
-    int N;
-    cin >> N;
-    // remove the newline character
-    cin.ignore();
-
-    vector<vector<int>> graph(N);
-    for (int i = 0; i < N; i++)
-    {
-        string line;
-        getline(cin, line);
-        istringstream iss(line);
-
-        int num;
-        while (iss >> num)
-        {
-            graph[i].push_back(num);
-        }
-    }
+    // if there are no intersecting elements, print "none"
+    if (intersect.empty())
+        cout << " none";
+    else
+        for (const auto &x : intersect)
+            cout << ' ' << x;
 }
 
 int main()
 {
-    // mapFunc();
-    // vectorFunc();
-    graphFunc();
+    mapFunc();
+    //vectorFunc();
+    
     return 0;
 }
