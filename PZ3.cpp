@@ -27,13 +27,13 @@ string generateRandomString(int length)
     return result;
 }
 
-// get the hashcode of a string coding letter by its position in string and its value
+// get the hashcode of a string
 int getHashCode(string str)
 {
     int hash = 0;
     for (int i = 0; i < str.length(); i++)
     {
-        hash = hash * i + str[i];
+        hash = hash * 31 + str[i];
     }
     return hash;
 }
@@ -46,6 +46,11 @@ int main()
     // create an arrays of times for each length for both methods
     double timesByString[4] = {0, 0, 0, 0};
     double timesByHash[4] = {0, 0, 0, 0};
+
+    // count collisions by string and by hash for each length
+    int collisionsByString[4] = {0, 0, 0, 0};
+    int collisionsByHash[4] = {0, 0, 0, 0};
+
     int lengthOfTest = 10;
 
     for (int i = 0; i < lengthOfTest; i++)
@@ -53,8 +58,6 @@ int main()
         // for lengts from 3 to 6
         for (int length = 3; length <= 6; length++)
         {
-            int collisionsByHash = 0;   // int to store the number of collisions by hash
-            int collisionsByString = 0; // int to store the number of collisions by string
             int hashCodes[2000];        // int array to store the hashCodes of the 2000 random strings
             string strings[2000];       // string array to store the 2000 random strings
 
@@ -73,7 +76,7 @@ int main()
                 for (int j = i + 1; j < 2000; j++) // iterate through the rest of the strings
                 {
                     if (strings[i] == strings[j]) // compare the strings
-                        collisionsByString++;     // increment the collision counter
+                        collisionsByString[length - 3]++; // if they are equal, increment the collision counter
                 }
             }
             clock_t end = clock();                                               // set the stop time
@@ -86,7 +89,7 @@ int main()
                 for (int j = i + 1; j < 2000; j++)
                 {
                     if (hashCodes[i] == hashCodes[j])
-                        collisionsByHash++;
+                        collisionsByHash[length - 3]++; // if they are equal, increment the collision counter
                 }
             }
             end = clock();
@@ -94,14 +97,28 @@ int main()
         }
     }
 
-    // count the average time for each length
+    // count the average time for each length and average collisions
     for (int i = 0; i < 4; i++)
     {
         timesByString[i] /= lengthOfTest;
         timesByHash[i] /= lengthOfTest;
+        collisionsByString[i] /= lengthOfTest;
+        collisionsByHash[i] /= lengthOfTest;
     }
 
     // print the results
+    cout << "Average collisions by string: " << endl;
+    for (int i = 0; i < 4; i++)
+    {
+        cout << "Length " << i + 3 << ": " << collisionsByString[i] << endl;
+    }
+    cout << endl;
+    cout << "Average collisions by hash: " << endl;
+    for (int i = 0; i < 4; i++)
+    {
+        cout << "Length " << i + 3 << ": " << collisionsByHash[i] << endl;
+    }
+    cout << endl;
     cout << "Average time by string: " << endl;
     for (int i = 0; i < 4; i++)
     {
