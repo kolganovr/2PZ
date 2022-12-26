@@ -58,7 +58,7 @@ void writeObjectsToFile(const string &fileName, const vector<Person> &objects)
 }
 
 // This function searches for objects that match the search criteria and returns them as a vector
-vector<Person> searchObjects(const vector<Person> &objects, const string &criteria, const string &value)
+vector<Person> searchObjects(const vector<Person> &objects, const string &criteria, const string &value, const string &comparison)
 {
     // Create a vector of Person objects called results
     vector<Person> results;
@@ -69,47 +69,45 @@ vector<Person> searchObjects(const vector<Person> &objects, const string &criter
         // If the search criteria is age
         if (criteria == "age")
         {
-            // If the age of the current object matches the value of age
-            if (object.age == stoi(value))
-            {
-                // Add the current object to the results vector
+            // Check the comparison operator and add the object to the results vector if the comparison is true
+            if (comparison == "==" && object.age == stoi(value))
                 results.push_back(object);
-            }
+            else if (comparison == ">" && object.age > stoi(value))
+                results.push_back(object);
+            else if (comparison == "<" && object.age < stoi(value))
+                results.push_back(object);
         }
         // If the search criteria is height
         else if (criteria == "height")
         {
-            // If the height of the current object matches the value of height
-            if (object.height == stof(value))
-            {
-                // Add the current object to the results vector
+            // Check the comparison operator and add the object to the results vector if the comparison is true
+            if (comparison == "==" && object.height == stof(value))
                 results.push_back(object);
-            }
+            else if (comparison == ">" && object.height > stof(value))
+                results.push_back(object);
+            else if (comparison == "<" && object.height < stof(value))
+                results.push_back(object);
         }
         // If the search criteria is name
         else if (criteria == "name")
         {
-            // If the name of the current object matches the value of name
-            if (object.name == value)
-            {
-                // Add the current object to the results vector
+            // Check the comparison operator and add the object to the results vector if the comparison is true
+            if (comparison == "==" && object.name == value)
                 results.push_back(object);
-            }
         }
         // If the search criteria is isMale
         else if (criteria == "isMale")
         {
-            // If the isMale of the current object matches the value of isMale
-            if (object.isMale == (value == "true"))
-            {
-                // Add the current object to the results vector
+            // Check the comparison operator and add the object to the results vector if the comparison is true
+            if (comparison == "==" && object.isMale == (value == "true"))
                 results.push_back(object);
-            }
         }
     }
+
     // Return the results vector
     return results;
 }
+
 
 int main()
 {
@@ -200,12 +198,16 @@ int main()
             break;
         }
 
-        // Ask the user for a value to search for
-        cout << "Enter search value: ";
-        cin >> value;
 
         // Search for objects matching the criteria
-        vector<Person> results = searchObjects(objects, criteria, value);
+        string comparison;
+        cout << "Enter comparison operator (==, >, <) and search value: ";
+        cin >> comparison;
+
+        // Ask the user for a value to search for
+        cin >> value;
+
+        vector<Person> results = searchObjects(objects, criteria, value, comparison);
 
         // If no objects were found, display a message
         if (results.empty())

@@ -230,30 +230,50 @@ public:
         }
     }
 
-    // sort the list based on accesCount
+    void swapNodes(Node *node1, Node *node2)
+    {
+        // Set the next pointer of the previous node of node1 to node2
+        if (node1->prev != nullptr)
+        {
+            node1->prev->next = node2;
+        }
+        else
+        {
+            // node1 is the first node
+            head = node2;
+        }
+        // Set the prev pointer of node2 to node1
+        node2->prev = node1->prev;
+        // Set the next pointer of node1 to the next node of node2
+        node1->next = node2->next;
+        if (node2->next != nullptr)
+        {
+            node2->next->prev = node1;
+        }
+        else
+        {
+            // node2 is the last node
+            tail = node1;
+        }
+        node2->next = node1;
+        node1->prev = node2;
+    }
+
+    // sort the bidirectional list based on accesCount. swap pointers
     void sort()
     {
         Node *temp = head;
-        Node *temp2 = head;
         while (temp != NULL)
         {
+            Node *temp2 = temp->next;
             while (temp2 != NULL)
             {
-                if (temp->accesCount > temp2->accesCount)
+                if (temp->accesCount < temp2->accesCount)
                 {
-                    int tempData = temp->data;
-                    int tempId = temp->id;
-                    int tempAccesCount = temp->accesCount;
-                    temp->data = temp2->data;
-                    temp->id = temp2->id;
-                    temp->accesCount = temp2->accesCount;
-                    temp2->data = tempData;
-                    temp2->id = tempId;
-                    temp2->accesCount = tempAccesCount;
+                    swapNodes(temp, temp2);
                 }
                 temp2 = temp2->next;
             }
-            temp2 = temp;
             temp = temp->next;
         }
     }

@@ -93,7 +93,7 @@ void vectorFunc()
 int main()
 {
     mapFunc();
-    //vectorFunc();
+    vectorFunc();
     
     return 0;
 }
