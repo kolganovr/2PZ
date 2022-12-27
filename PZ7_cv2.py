@@ -9,6 +9,7 @@
 # pip install numpy
 
 # Make sure that you edit the path variable to the path where you saved the images (Right after importing the libraries)
+# Images must be named {apple/banana}_{1-4}.bmp
 
 # Save the code in a file with a .py extension, for example image_comparison.py.
 
@@ -22,15 +23,11 @@
 
 import cv2
 from math import sqrt
-# how to install skimage.metrics
-# pip install scikit-image
 
 # Define the path to folder with images
 path = "C:\\Users\\kolga\\Downloads\\"
 
 # Define the Image class
-
-
 class Image:
     # Constructor that takes a filepath as an argument and reads the image data from the file
     # Prints the image dimensions to confirm that the image was loaded
@@ -44,17 +41,27 @@ class Image:
         return self.image_data
 
 # Compare two images and return the total difference
-
-
 def compare_images(image1, image2):
-    # Calculate the absolute difference between the two images
-    diff = cv2.absdiff(image1.get_image_data(), image2.get_image_data())
-    # Calculate the total difference
-    total_diff = cv2.sumElems(diff)[0]
+    # compare images using gistograms
 
-    # Return the square root of the total difference
-    return int(sqrt(total_diff))
+    # find the histogram and normalize it
+    hist1 = cv2.calcHist([image1.get_image_data()], [0], None, [256], [0, 256])
+    hist1 = cv2.normalize(hist1, hist1).flatten()
 
+    # find the histogram and normalize it
+    hist2 = cv2.calcHist([image2.get_image_data()], [0], None, [256], [0, 256])
+    hist2 = cv2.normalize(hist2, hist2).flatten()
+
+    # compute the chi-squared distance
+    chi = cv2.compareHist(hist1, hist2, cv2.HISTCMP_CHISQR)
+
+    # return the chi-squared distance
+    # chi = int(chi*10)/10.0
+    # return chi
+
+    # return correlation coefficient
+    corel = int(cv2.compareHist(hist1, hist2, cv2.HISTCMP_CORREL)*1000)/10.0
+    return corel
 
 def main():
     # Ask the user to select a photo type (apple or banana)

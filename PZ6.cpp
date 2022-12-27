@@ -37,6 +37,12 @@ public:
         }
     }
 
+    // get tail function
+    Node *getTail()
+    {
+        return tail;
+    }
+
     /// @brief Get node data by its id
     /// @param id id of the element
     /// @return data
@@ -58,6 +64,7 @@ public:
             {
                 // increment the accessCount of the Node
                 temp->accesCount++;
+                sort(temp);
                 // return the data of the Node
                 return temp->data;
             }
@@ -83,6 +90,7 @@ public:
             {
                 // increment the accessCount of the Node
                 temp->accesCount++;
+                sort(temp);
                 // return the data of the Node
                 return temp->data;
             }
@@ -109,7 +117,6 @@ public:
             head = temp;
         size++;
         currentId++;
-        sort();
     }
 
     /// @brief Ads the element to the start of the list
@@ -259,22 +266,17 @@ public:
         node1->prev = node2;
     }
 
-    // sort the bidirectional list based on accesCount. swap pointers
-    void sort()
+    // sort the bidirectional list based on accesCount. swap pointers.
+    // function is called after every acces to a Node. so function needs to sort from the last accessed Node to the first
+    void sort(Node *editedNode)
     {
-        Node *temp = head;
-        while (temp != NULL)
+        Node *temp = editedNode;
+        while (temp != head)
         {
-            Node *temp2 = temp->next;
-            while (temp2 != NULL)
-            {
-                if (temp->accesCount < temp2->accesCount)
-                {
-                    swapNodes(temp, temp2);
-                }
-                temp2 = temp2->next;
-            }
-            temp = temp->next;
+            if (temp->prev->accesCount < temp->accesCount)
+                swapNodes(temp->prev, temp);
+            else
+                break;
         }
     }
 };
@@ -292,11 +294,15 @@ int main()
 
     list.print();
 
-    cout << list.getbypos(2) << endl;
-    cout << list.getbypos(2) << endl;
-    cout << list.getbypos(3) << endl;
-    cout << list.getbyid(4) << endl;
+    cout << endl;
 
-    list.sort();
+    cout << list.getbypos(2) << endl; // 2 -10 1 3 4
+    cout << list.getbypos(2) << endl; // 2 1 -10 3 4
+    cout << list.getbypos(3) << endl; // 2 1 3 -10 4
+    cout << list.getbyid(2) << endl;  // 3 2 1 -10 4
+
+    cout << endl;
+
+    list.sort(list.getTail());
     list.print();
 }
